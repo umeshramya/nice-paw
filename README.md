@@ -1,4 +1,4 @@
-<img src="nice-paw.png" alt="nice-paw logo" width="200" />
+<img src="https://raw.githubusercontent.com/umeshramya/nice-paw/main/nice-paw.png" alt="nice-paw logo" width="200" />
 
 # nice-paw
 
