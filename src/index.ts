@@ -1,6 +1,7 @@
 import { McpServer, StdioServerTransport } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 import { loginTool, loginToolSchema } from "./login.js";
+import 'dotenv/config';
 
 export const server = new McpServer({
   name: 'nice-paw',
