@@ -1,19 +1,29 @@
 {
   "name": "nice-paw",
-  "version": "1.0.1",
-  "description": "A TypeScript library example",
+  "version": "1.0.2",
+  "description": "MCP server for nicehms.com healthcare authentication",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "nice-paw": "bin/nice-paw.js"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "prepublishOnly": "npm run build",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "start": "node dist/index.js",
+    "start:dev": "node --loader ts-node/esm src/index.ts",
+    "clean": "rm -rf dist",
+    "rebuild": "npm run clean && npm run build",
+    "prepare": "npm run build",
+    "test": "jest --config jest.config.mjs",
+    "test:watch": "jest --watch --config jest.config.mjs",
+    "test:coverage": "jest --coverage --config jest.config.mjs",
+    "lint": "echo \"Add ESLint if needed\"",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist",
+    "bin",
     "nice-paw.png",
     "README.md",
     "LICENSE"
@@ -21,12 +31,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
     "jest": "^30.3.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0-alpha.2",
+    "zod": "^4.3.6",
+    "@cfworker/json-schema": "^4.1.1"
   }
 }
