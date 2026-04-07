@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 export const server = new McpServer({
   name: 'nice-paw',
-  version: '1.1.0'
+  version: '2.0.0'
 });
 
 
