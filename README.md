@@ -10,12 +10,16 @@ An MCP (Model Context Protocol) server for **https://www.nicehms.com** healthcar
 
 ## 🚀 Features
 
-* 🔐 Login tool (email + password)
+* 🔐 Enhanced Login tool with multiple authentication modes
+* 🔒 Password encryption with master key support
+* 🏥 Hospital profile management with encrypted storage
 * ⚡ MCP stdio-based server
 * 🧠 Zod-based input validation
 * 🧪 Jest test coverage
 * 📦 CLI support via `nice-paw` command
 * 🧩 Easy integration with Claude Code
+* 💾 SQLite database for local credential storage
+* 🔑 AES-256-GCM encryption with PBKDF2 key derivation
 
 ---
 
@@ -117,31 +121,87 @@ Add to:
 
 Once connected, Claude Code will expose available tools.
 
-### 🔐 Login Tool
+### 🔐 Enhanced Login Tool
 
-Authenticate using email and password.
+The login tool now supports three authentication modes with encrypted password storage:
 
-#### Example (Demo Credentials)
+#### 1. Plain Login (Backward Compatibility)
+Authenticate using email and password directly.
 
+```json
+{
+  "email": "user@hospital.com",
+  "password": "userPassword123"
+}
 ```
-email: admin@example.com
-password: password
+
+#### 2. Add New Hospital with Encryption
+Store hospital credentials with encrypted password using a master key.
+
+```json
+{
+  "action": "add_hospital",
+  "email": "admin@hospital.com",
+  "password": "adminPassword456",
+  "encryptionKey": "MyMasterKey@2024!Secure",
+  "hospitalName": "General Hospital",
+  "serverUrl": "https://api.hospital.com"
+}
+```
+
+#### 3. Login with Stored Hospital Profile
+Authenticate using stored hospital credentials (password is decrypted with master key).
+
+```json
+{
+  "hospitalId": "1",
+  "encryptionKey": "MyMasterKey@2024!Secure"
+}
 ```
 
 #### Example Response
 
 ```json
 {
-  "content": [
-    {
-      "type": "text",
-      "text": "Login successful"
-    }
-  ]
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 123,
+    "email": "admin@hospital.com",
+    "role": "admin",
+    "name": "John Doe",
+    "username": "johndoe",
+    "organizationId": 456,
+    "organizationName": "General Hospital",
+    "mobile": "+1234567890",
+    "professionalAccess": "full",
+    "uuid": "550e8400-e29b-41d4-a716-446655440000"
+  },
+  "hospitalProfile": {
+    "id": 1,
+    "name": "General Hospital",
+    "serverUrl": "https://api.hospital.com",
+    "email": "admin@hospital.com"
+  },
+  "keyValidated": true
 }
 ```
 
-> ⚠️ Replace demo logic with real authentication in `src/login.ts` for production.
+### 🔒 Encryption & Security Features
+
+- **Master Key Encryption**: Single encryption key for all hospital passwords
+- **Key Validation**: SHA-256 fingerprint ensures consistent key usage
+- **AES-256-GCM**: Military-grade encryption with authentication
+- **PBKDF2**: 100,000 iterations for key derivation
+- **Unique Salt/IV**: Each password encrypted with unique parameters
+- **Local Storage**: SQLite database (nice-paw.db) stores encrypted credentials
+- **No Key Storage**: Master key is never stored, only its fingerprint
+
+### 🏥 Hospital Profile Management
+
+- Store multiple hospital credentials securely
+- Each profile includes: name, server URL, email, encrypted password
+- Automatic key validation when adding new hospitals
+- Backward compatible with plain login mode
 
 ---
 
@@ -151,8 +211,15 @@ password: password
 nice-paw/
 ├── src/
 │   ├── index.ts          # MCP server entry point
-│   ├── login.ts          # Login tool implementation
+│   ├── login.ts          # Enhanced login tool with encryption
+│   ├── encryption.ts     # AES-256-GCM encryption utilities
+│   ├── storage.ts        # SQLite database for hospital profiles
+│   ├── test-encryption.ts # Encryption/storage test script
+│   ├── test-login-integration.ts # Integration test examples
 │   └── __tests__/        # Jest test files
+│
+├── examples/
+│   └── enhanced-login-example.js # Usage examples
 │
 ├── bin/
 │   └── nice-paw.js       # CLI entry (executes compiled server)
@@ -269,6 +336,12 @@ npm run test:watch
 
 # Coverage
 npm run test:coverage
+
+# Test encryption module
+npm run build && node dist/test-encryption.js
+
+# View integration examples
+node dist/test-login-integration.js
 ```
 
 ---

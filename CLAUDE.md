@@ -76,3 +76,5 @@ The server uses the `@modelcontextprotocol/server` package (version 2.0.0-alpha.
 7. **Server Configuration**: The MCP server is currently named "my-server" in `src/index.ts:4`. This should be updated to an appropriate name for the nicehms.com service.
 
 8. **Jest ES Module Issues**: Jest tests currently fail due to ES module resolution problems with `@modelcontextprotocol/server` package. The package is ES module only, and Jest configuration may need additional setup for ES module support.
+
+9. **Version Consistency**: The MCP server version should always match the `package.json` version. When updating the package version, ensure any references to the server version in documentation, configuration, or code are updated accordingly.

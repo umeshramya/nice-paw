@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 export const server = new McpServer({
   name: 'nice-paw',
-  version: '1.0.0'
+  version: '1.1.0'
 });
 
 
@@ -15,7 +15,7 @@ server.registerTool(
   {
     title: "Login into Healthcare",
     description:
-      "Login into Healthcare organization using email and password. Returns JWT token.",
+      "Login into Healthcare organization. Supports plain login, stored hospital login with encrypted credentials, and adding new hospital profiles. Returns JWT token and user data.",
     inputSchema: loginToolSchema
   },
   loginTool
